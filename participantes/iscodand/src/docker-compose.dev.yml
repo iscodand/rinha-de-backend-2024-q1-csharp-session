@@ -2,15 +2,14 @@ version: "3.5"
 
 services:
   api01: &api
-    image: iscodand/rinha-2024q1-csharp-session
+    # image: iscodand/rinha-2024q1-csharp-session
+    build:
+      dockerfile: RinhaCrebito/Dockerfile
     hostname: api01
-    environment:
-      - DB_HOSTNAME=db
-      - PORT=3000
     ports:
-      - "3001:3000"
+      - "8080:3001"
     depends_on:
-      - db
+      - rinha-db
     deploy:
       resources:
         limits:
@@ -20,11 +19,8 @@ services:
   api02:
     <<: *api
     hostname: api02
-    environment:
-      - DB_HOSTNAME=db
-      - PORT=3000
     ports:
-      - "3002:3000"
+      - "8081:3002"
   
   nginx:
     image: nginx:latest
@@ -41,23 +37,27 @@ services:
           cpus: "0.15"
           memory: "10MB"
           
-  db:
+  rinha-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     user: root
-    volumes:
-      - mssqlserver_data:/var/opt/mssql/data
+    container_name: rinha-db
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=123
+      - SA_PASSWORD=R1nh4Cr3B1T0!
+    volumes:
+      - rinha-db-data:/var/opt/mssql/data
     ports:
       - "1433:1433"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.45"
-          memory: "140MB"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.45"
+    #       memory: "140MB"
 
 networks:
   default:
     driver: bridge
     name: rinha-nginx-2024q1
+
+volumes:
+  rinha-db-data:

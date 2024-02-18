@@ -1,0 +1,9 @@
+@RinhaCrebito_HostAddress = http://localhost:5259
+
+GET {{RinhaCrebito_HostAddress}}/clientes/[id]/extrato
+Accept: application/json
+
+POST {{RinhaCrebito_HostAddress}}/clientes/[id]/transacao
+Accept: application/json
+
+###
