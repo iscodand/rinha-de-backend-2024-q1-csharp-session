@@ -28,16 +28,15 @@ catch (Exception ex)
 
 app.MapGet("/clientes/{id}/extrato", async (int id, ApplicationDbContext context) =>
 {
-    if (await context.Customers.AnyAsync(x => x.Id == id) == false)
-        return Results.NotFound();
+    Customer customer = await context.Customers.AsNoTracking()
+                                            .Include(x => x.Transactions)
+                                            .Include(x => x.Balance)
+                                            .Where(x => x.Id == id)
+                                            .FirstOrDefaultAsync()
+                                            .ConfigureAwait(false);
 
-    Customer customer = await context.Customers
-                                                .AsNoTracking()
-                                                .Include(x => x.Transactions)
-                                                .Include(x => x.Balance)
-                                                .Where(x => x.Id == id)
-                                                .FirstOrDefaultAsync()
-                                                .ConfigureAwait(false);
+    if (customer is null)
+        return Results.NotFound();
 
     ExtractResponse response = new()
     {
