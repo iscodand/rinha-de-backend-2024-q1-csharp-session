@@ -10,11 +10,11 @@ services:
       - "8080:3001"
     depends_on:
       - rinha-db
-    deploy:
-      resources:
-        limits:
-          cpus: "0.45"
-          memory: "200MB"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.45"
+    #       memory: "200MB"
 
   api02:
     <<: *api
@@ -31,11 +31,11 @@ services:
       - api02
     ports:
       - "9999:9999"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.15"
-          memory: "10MB"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.15"
+    #       memory: "10MB"
           
   rinha-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -44,8 +44,6 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=R1nh4Cr3B1T0!
-    volumes:
-      - rinha-db-data:/var/opt/mssql/data
     ports:
       - "1433:1433"
     # deploy:
@@ -58,6 +56,3 @@ networks:
   default:
     driver: bridge
     name: rinha-nginx-2024q1
-
-volumes:
-  rinha-db-data:
